@@ -50,6 +50,9 @@ Changes and new features typically get discussed in the issue tracker or on Disc
 Compilation
 -----------
 
+### All
+All systems need to install [Pluto](https://pluto-lang.org/docs/Getting%20Started) and set the environment variables `PLUTO_LIB` and `PLUTO_INCLUDE` to point to Pluto's library and include directories respectively.
+
 ### Windows
 Follow the instructions at the [megasource][megasource] repository page.
 

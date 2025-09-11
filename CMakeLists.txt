@@ -63,7 +63,7 @@ set(LOVE_VERSION_STR "${LOVE_VERSION_MAJOR}.${LOVE_VERSION_MINOR}")
 
 message(STATUS "Version: ${LOVE_VERSION_STR}")
 
-set(LOVE_EXE_NAME love CACHE STRING "The name of the executable, usually 'love'")
+set(LOVE_EXE_NAME love-pluto CACHE STRING "The name of the executable, usually 'love'")
 
 set(LOVE_DEFAULT_LIB_NAME liblove)
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
@@ -110,7 +110,11 @@ add_library(lovedep::Theora INTERFACE IMPORTED)
 add_library(lovedep::Vorbis INTERFACE IMPORTED)
 add_library(lovedep::Ogg INTERFACE IMPORTED)
 add_library(lovedep::Zlib INTERFACE IMPORTED)
-add_library(lovedep::Lua INTERFACE IMPORTED)
+add_library(Pluto STATIC IMPORTED)
+set_target_properties(Pluto PROPERTIES
+    IMPORTED_LOCATION "D:/Code/Pluto/out/static lib x64/pluto.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "D:/include"
+)
 
 if(MEGA)
 	# LOVE_MSVC_DLLS contains runtime DLLs that should be bundled with the love
@@ -146,24 +150,12 @@ if(MEGA)
 	target_link_libraries(lovedep::Ogg INTERFACE ${MEGA_LIBOGG})
 	target_link_libraries(lovedep::Zlib INTERFACE ${MEGA_ZLIB})
 
-	if(LOVE_JIT)
-		target_include_directories(lovedep::Lua INTERFACE ${MEGA_LUAJIT_INCLUDE})
-		target_link_libraries(lovedep::Lua INTERFACE ${MEGA_LUAJIT_LIB})
-		set(LOVE_EXTRA_DLLS ${LOVE_EXTRA_DLLS} ${MEGA_LUAJIT_DLL})
-		set(LOVE_EXTRA_DEPENDECIES luajit)
-		set(LOVE_MOVE_DLLS
-			${LOVE_MOVE_DLLS}
-			${MEGA_LUAJIT_DLL}
-		)
-	else()
-		# MEGA_LUA51 is a CMake target, so includes are handled
-		# automatically.
-		target_link_libraries(lovedep::Lua INTERFACE ${MEGA_LUA51})
-		set(LOVE_MOVE_DLLS
-			${LOVE_MOVE_DLLS}
-			${MEGA_LUA51}
-		)
-	endif()
+	target_link_libraries(Pluto INTERFACE "$ENV{PLUTO_LIB}")
+	target_include_directories(Pluto INTERFACE "$ENV{PLUTO_INCLUDE}")
+	set(LOVE_MOVE_DLLS
+		${LOVE_MOVE_DLLS}
+		${MEGA_LUA51}
+	)
 else()
 	if(MSVC OR ANDROID)
 		message(FATAL_ERROR "
@@ -211,15 +203,9 @@ Please see https://github.com/love2d/megasource
 	target_include_directories(lovedep::Zlib INTERFACE ${ZLIB_INCLUDE_DIRS})
 	target_link_libraries(lovedep::Zlib INTERFACE ${ZLIB_LIBRARY})
 
-	if(LOVE_JIT)
-		find_package(LuaJIT REQUIRED)
-		target_include_directories(lovedep::Lua INTERFACE ${LUAJIT_INCLUDE_DIR})
-		target_link_libraries(lovedep::Lua INTERFACE ${LUAJIT_LIBRARY})
-	else()
-		find_package(Lua51 REQUIRED)
-		target_include_directories(lovedep::Lua INTERFACE ${LUA_INCLUDE_DIR})
-		target_link_libraries(lovedep::Lua INTERFACE ${LUA_LIBRARY})
-	endif()
+	target_include_directories(Pluto INTERFACE "$ENV{PLUTO_INCLUDE}")
+	target_link_libraries(Pluto INTERFACE "$ENV{PLUTO_LIB}")
+
 endif()
 
 ###
@@ -291,7 +277,7 @@ add_library(love_common STATIC
 	src/common/version.h
 )
 target_link_libraries(love_common PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -343,7 +329,7 @@ add_library(love_audio_root STATIC
 	src/modules/audio/wrap_RecordingDevice.h
 )
 target_link_libraries(love_audio_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::OpenAL
 )
 
@@ -413,7 +399,7 @@ add_library(love_data STATIC
 	src/modules/data/wrap_DataView.h
 )
 target_link_libraries(love_data PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::Zlib
 )
 
@@ -429,7 +415,7 @@ add_library(love_event_root STATIC
 	src/modules/event/wrap_Event.lua
 )
 target_link_libraries(love_event_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -470,7 +456,7 @@ add_library(love_filesystem_root STATIC
 	src/modules/filesystem/wrap_NativeFile.h
 )
 target_link_libraries(love_filesystem_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -523,7 +509,7 @@ add_library(love_font_root STATIC
 	src/modules/font/wrap_Rasterizer.h
 )
 target_link_libraries(love_font_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::Freetype
 )
 
@@ -620,7 +606,7 @@ add_library(love_graphics_root STATIC
 	src/modules/graphics/wrap_Video.lua
 )
 target_link_libraries(love_graphics_root PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 add_library(love_graphics_opengl STATIC
@@ -734,7 +720,7 @@ add_library(love_image_root STATIC
 	src/modules/image/wrap_ImageData.lua
 )
 target_link_libraries(love_image_root PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 add_library(love_image_magpie STATIC
@@ -779,7 +765,7 @@ add_library(love_joystick_root STATIC
 	src/modules/joystick/wrap_JoystickModule.h
 )
 target_link_libraries(love_joystick_root PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 add_library(love_joystick_sdl STATIC
@@ -809,7 +795,7 @@ add_library(love_keyboard_root STATIC
 	src/modules/keyboard/wrap_Keyboard.h
 )
 target_link_libraries(love_keyboard_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -852,7 +838,7 @@ add_library(love_math STATIC
 	src/modules/math/wrap_Transform.h
 )
 target_link_libraries(love_math PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 #
@@ -869,7 +855,7 @@ add_library(love_mouse_root STATIC
 	src/modules/mouse/wrap_Mouse.h
 )
 target_link_libraries(love_mouse_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -989,7 +975,7 @@ add_library(love_physics_box2d STATIC
 	src/modules/physics/box2d/wrap_World.h
 )
 target_link_libraries(love_physics_box2d PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 add_library(love_physics INTERFACE)
@@ -1009,7 +995,7 @@ add_library(love_sensor_root STATIC
 	src/modules/sensor/wrap_Sensor.h
 )
 target_link_libraries(love_sensor_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -1047,7 +1033,7 @@ add_library(love_sound_root STATIC
 	src/modules/sound/wrap_SoundData.lua
 )
 target_link_libraries(love_sound_root PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 add_library(love_sound_lullaby STATIC
@@ -1087,7 +1073,7 @@ add_library(love_system_root STATIC
 	src/modules/system/wrap_System.h
 )
 target_link_libraries(love_system_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -1127,7 +1113,7 @@ add_library(love_thread_root STATIC
 	src/modules/thread/wrap_ThreadModule.h
 )
 target_link_libraries(love_thread_root PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 add_library(love_thread_sdl STATIC
@@ -1157,7 +1143,7 @@ add_library(love_timer STATIC
 	src/modules/timer/wrap_Timer.h
 )
 target_link_libraries(love_timer PUBLIC
-	lovedep::Lua
+	Pluto
 )
 
 #
@@ -1171,7 +1157,7 @@ add_library(love_touch_root STATIC
 	src/modules/touch/wrap_Touch.h
 )
 target_link_libraries(love_touch_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -1202,7 +1188,7 @@ add_library(love_video_root STATIC
 	src/modules/video/wrap_VideoStream.h
 )
 target_link_libraries(love_video_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::Theora
 	lovedep::Ogg
 )
@@ -1237,7 +1223,7 @@ add_library(love_window_root STATIC
 	src/modules/window/wrap_Window.h
 )
 target_link_libraries(love_window_root PUBLIC
-	lovedep::Lua
+	Pluto
 	lovedep::SDL
 )
 
@@ -1376,7 +1362,7 @@ add_library(love_3p_enet
 	src/libraries/enet/libenet/include/enet/win32.h
 )
 love_disable_warnings(love_3p_enet)
-target_link_libraries(love_3p_enet lovedep::Lua)
+target_link_libraries(love_3p_enet Pluto)
 target_include_directories(love_3p_enet PUBLIC src/libraries/enet/libenet/include)
 if(MINGW)
 	target_link_libraries(love_3p_enet winmm.a)
@@ -1526,72 +1512,44 @@ else()
 	set(WIN32_LIB_EXT .lib)
 endif()
 
-add_library(love_3p_luasocket
-	src/libraries/luasocket/luasocket.cpp
-	src/libraries/luasocket/luasocket.h
-	src/libraries/luasocket/libluasocket/auxiliar.c
-	src/libraries/luasocket/libluasocket/auxiliar.h
-	src/libraries/luasocket/libluasocket/buffer.c
-	src/libraries/luasocket/libluasocket/buffer.h
-	src/libraries/luasocket/libluasocket/compat.c
-	src/libraries/luasocket/libluasocket/compat.h
-	src/libraries/luasocket/libluasocket/except.c
-	src/libraries/luasocket/libluasocket/except.h
-	src/libraries/luasocket/libluasocket/ftp.lua.h
-	src/libraries/luasocket/libluasocket/headers.lua.h
-	src/libraries/luasocket/libluasocket/http.lua.h
-	src/libraries/luasocket/libluasocket/inet.c
-	src/libraries/luasocket/libluasocket/inet.h
-	src/libraries/luasocket/libluasocket/io.c
-	src/libraries/luasocket/libluasocket/io.h
-	src/libraries/luasocket/libluasocket/ltn12.lua.h
-	src/libraries/luasocket/libluasocket/luasocket.c
-	src/libraries/luasocket/libluasocket/luasocket.h
-	src/libraries/luasocket/libluasocket/mbox.lua.h
-	src/libraries/luasocket/libluasocket/mime.c
-	src/libraries/luasocket/libluasocket/mime.h
-	src/libraries/luasocket/libluasocket/mime.lua.h
-	src/libraries/luasocket/libluasocket/options.c
-	src/libraries/luasocket/libluasocket/options.h
-	src/libraries/luasocket/libluasocket/pierror.h
-	src/libraries/luasocket/libluasocket/select.c
-	src/libraries/luasocket/libluasocket/select.h
-	src/libraries/luasocket/libluasocket/smtp.lua.h
-	src/libraries/luasocket/libluasocket/socket.h
-	src/libraries/luasocket/libluasocket/socket.lua.h
-	src/libraries/luasocket/libluasocket/tcp.c
-	src/libraries/luasocket/libluasocket/tcp.h
-	src/libraries/luasocket/libluasocket/timeout.c
-	src/libraries/luasocket/libluasocket/timeout.h
-	src/libraries/luasocket/libluasocket/tp.lua.h
-	src/libraries/luasocket/libluasocket/udp.c
-	src/libraries/luasocket/libluasocket/udp.h
-	src/libraries/luasocket/libluasocket/url.lua.h
-	src/libraries/luasocket/libluasocket/unix.c
-	src/libraries/luasocket/libluasocket/unix.h
-	src/libraries/luasocket/libluasocket/unixdgram.c
-	src/libraries/luasocket/libluasocket/unixdgram.h
-	src/libraries/luasocket/libluasocket/unixstream.c
-	src/libraries/luasocket/libluasocket/unixstream.h
+file(GLOB LUA_SOCKET_C
+    src/libraries/luasocket/libluasocket/*.c
 )
-target_link_libraries(love_3p_luasocket lovedep::Lua)
-love_disable_warnings(love_3p_luasocket)
+
+set_source_files_properties(${LUA_SOCKET_C} PROPERTIES LANGUAGE CXX)
+
+if(MSVC OR MINGW) # I could have done this a better way but.... oh well :shrug:
+	list(FILTER LUA_SOCKET_C EXCLUDE REGEX "serial\\.c$")
+	list(FILTER LUA_SOCKET_C EXCLUDE REGEX "usocket\\.c$")
+	list(FILTER LUA_SOCKET_C EXCLUDE REGEX "usocket\\.h$")
+else()
+	list(FILTER LUA_SOCKET_C EXCLUDE REGEX "wsocket\\.c$")
+	list(FILTER LUA_SOCKET_C EXCLUDE REGEX "wsocket\\.h$")
+endif()
+
+add_library(love_3p_luasocket STATIC
+    src/libraries/luasocket/luasocket.cpp
+    src/libraries/luasocket/luasocket.h
+    ${LUA_SOCKET_C}
+)
+
+target_include_directories(love_3p_luasocket
+    PRIVATE
+    D:/include
+)
 
 if(MSVC OR MINGW)
-	target_sources(love_3p_luasocket PRIVATE
-		src/libraries/luasocket/libluasocket/wsocket.c
-		src/libraries/luasocket/libluasocket/wsocket.h
-	)
-
-	target_link_libraries(love_3p_luasocket
-		ws2_32${WIN32_LIB_EXT}
-	)
+    target_sources(love_3p_luasocket PRIVATE
+        src/libraries/luasocket/libluasocket/wsocket.c
+        src/libraries/luasocket/libluasocket/wsocket.h
+    )
+    target_link_libraries(love_3p_luasocket PRIVATE ws2_32${WIN32_LIB_EXT})
 else()
-	target_sources(love_3p_luasocket PRIVATE
-		src/libraries/luasocket/libluasocket/serial.c
+    target_sources(love_3p_luasocket PRIVATE
+        src/libraries/luasocket/libluasocket/serial.c
 		src/libraries/luasocket/libluasocket/usocket.c
 		src/libraries/luasocket/libluasocket/usocket.h
-	)
+    )
 endif()
 
 #
@@ -1599,13 +1557,22 @@ endif()
 #
 
 add_library(love_3p_lua53
-	src/libraries/lua53/lprefix.h
-	src/libraries/lua53/lstrlib.c
-	src/libraries/lua53/lstrlib.h
-	src/libraries/lua53/lutf8lib.c
-	src/libraries/lua53/lutf8lib.h
+    src/libraries/lua53/lprefix.h
+    src/libraries/lua53/lstrlib.c
+    src/libraries/lua53/lstrlib.h
+    src/libraries/lua53/lutf8lib.c
+    src/libraries/lua53/lutf8lib.h
 )
-target_link_libraries(love_3p_lua53 lovedep::Lua)
+
+set_source_files_properties(
+    src/libraries/lua53/lstrlib.c
+    src/libraries/lua53/lutf8lib.c
+    PROPERTIES
+        LANGUAGE CXX
+)
+
+target_link_libraries(love_3p_lua53 PRIVATE Pluto)
+target_include_directories(love_3p_lua53 PRIVATE src/libraries/lua53)
 
 #
 # Lua HTTPS
@@ -1641,7 +1608,7 @@ add_library(love_3p_luahttps
 	src/libraries/luahttps/src/windows/WinINetClient.cpp
 	src/libraries/luahttps/src/windows/WinINetClient.h
 )
-target_link_libraries(love_3p_luahttps lovedep::Lua)
+target_link_libraries(love_3p_luahttps Pluto)
 
 if (APPLE)
 	target_sources(love_3p_luahttps PRIVATE
@@ -1964,7 +1931,7 @@ love_group_projects(NAME "liblove" NESTED TARGETS ${LIBLOVE_DEPENDENCIES})
 love_group_projects(NAME "liblove/libraries" NESTED TARGETS ${LIBLOVE_LIBRARIES})
 love_group_projects(NAME "liblove" TARGETS liblove ${LOVE_EXTRA_DEPENDECIES})
 
-love_group_projects(NAME "lovedep" TARGETS lovedep::SDL lovedep::Freetype lovedep::Harfbuzz lovedep::OpenAL lovedep::Modplug lovedep::Theora lovedep::Vorbis lovedep::Ogg lovedep::Zlib lovedep::Lua)
+love_group_projects(NAME "lovedep" TARGETS lovedep::SDL lovedep::Freetype lovedep::Harfbuzz lovedep::OpenAL lovedep::Modplug lovedep::Theora lovedep::Vorbis lovedep::Ogg lovedep::Zlib Pluto)
 love_group_projects(NAME "lovedep" TARGETS lua51 alcommon al-excommon harfbuzz-subset zlib)
 
 

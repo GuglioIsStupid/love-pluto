@@ -25,7 +25,7 @@ misrepresented as being the original software.
 local ImageData_mt, ffifuncspointer_str = ...
 local ImageData = ImageData_mt.__index
 
-local tonumber, assert, error = tonumber, assert, error
+local tonumber, error = tonumber, error
 local type, pcall = type, pcall
 local floor = math.floor
 local min, max = math.min, math.max
@@ -173,7 +173,7 @@ local conversions = {
 		tolua = function(self)
 			return tonumber(ffifuncs.float16to32(self.r)), tonumber(ffifuncs.float16to32(self.g)), 0, 1
 		end,
-		fromlua = function(self, r, g, b, a)
+		fromlua = function(self, r, g, _, _)
 			self.r = ffifuncs.float32to16(r)
 			self.g = ffifuncs.float32to16(g)
 		end,
@@ -198,7 +198,7 @@ local conversions = {
 		tolua = function(self)
 			return tonumber(self.r), 0, 0, 1
 		end,
-		fromlua = function(self, r, g, b, a)
+		fromlua = function(self, r, _, _, _)
 			self.r = r
 		end,
 	},
@@ -207,7 +207,7 @@ local conversions = {
 		tolua = function(self)
 			return tonumber(self.r), tonumber(self.g), 0, 1
 		end,
-		fromlua = function(self, r, g, b, a)
+		fromlua = function(self, r, g, _, _)
 			self.r = r
 			self.g = g
 		end,
@@ -312,7 +312,7 @@ local conversions = {
 			local b = tonumber(ffifuncs.float10to32(bit.band(bit.rshift(rgb, 22), 0x3FF)))
 			return r, g, b, 1
 		end,
-		fromlua = function(self, r, g, b, a)
+		fromlua = function(self, r, g, b, _)
 			self.rgb = bit.bor(
 				ffifuncs.float32to11(r),
 				bit.lshift(ffifuncs.float32to11(g), 11),

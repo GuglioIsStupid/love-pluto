@@ -23,7 +23,6 @@ misrepresented as being the original software.
 --]]
 
 local table_concat = table.concat
-local ipairs = ipairs
 local pcall, type, error = pcall, type, error
 local graphics = love.graphics
 
@@ -92,7 +91,7 @@ end
 function graphics.getStencilTest()
 	love.markDeprecated(2, "love.graphics.getStencilTest", "function", "replaced", "love.graphics.getStencilMode or getStencilState")
 
-	local action, mode, value = graphics.getStencilState()
+	local _, mode, value = graphics.getStencilState()
 	return mode, value
 end
 
@@ -108,20 +107,20 @@ function graphics._transformGLSLErrorMessages(message)
 	lines[#lines+1] = prefix..shadertype.." shader code:"
 	for l in message:gmatch("[^\n]+") do
 		-- nvidia: 0(<linenumber>) : error/warning [NUMBER]: <error message>
-		local linenumber, what, message = l:match("^0%((%d+)%)%s*:%s*(%w+)[^:]+:%s*(.+)$")
+		local linenumber, what, message2 = l:match("^0%((%d+)%)%s*:%s*(%w+)[^:]+:%s*(.+)$")
 		if not linenumber then
 			-- AMD: ERROR 0:<linenumber>: error/warning(#[NUMBER]) [ERRORNAME]: <errormessage>
-			linenumber, what, message = l:match("^%w+: 0:(%d+):%s*(%w+)%([^%)]+%)%s*(.+)$")
+			linenumber, what, message2 = l:match("^%w+: 0:(%d+):%s*(%w+)%([^%)]+%)%s*(.+)$")
 		end
 		if not linenumber then
 			-- macOS (?): ERROR: 0:<linenumber>: <errormessage>
-			what, linenumber, message = l:match("^(%w+): %d+:(%d+): (.+)$")
+			what, linenumber, message2 = l:match("^(%w+): %d+:(%d+): (.+)$")
 		end
 		if not linenumber and l:match("^ERROR:") then
 			what = l
 		end
-		if linenumber and what and message then
-			lines[#lines+1] = ("Line %d: %s: %s"):format(linenumber, what, message)
+		if linenumber and what and message2 then
+			lines[#lines+1] = ("Line %d: %s: %s"):format(linenumber, what, message2)
 		elseif what then
 			lines[#lines+1] = what
 		end

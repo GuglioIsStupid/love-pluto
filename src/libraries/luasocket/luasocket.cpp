@@ -21,11 +21,9 @@
 #include "luasocket.h"
 
 // LuaSocket
-extern "C" {
 #include "libluasocket/luasocket.h"
 #include "libluasocket/mime.h"
 #include "libluasocket/unix.h"
-}
 
 // Lua files
 #include "libluasocket/ftp.lua.h"

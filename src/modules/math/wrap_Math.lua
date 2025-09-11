@@ -24,7 +24,7 @@ misrepresented as being the original software.
 
 local love_math, ffifuncspointer_str = ...
 
-local type, tonumber, error = type, tonumber, error
+local type, tonumber = type, tonumber
 local floor = math.floor
 local min, max = math.min, math.max
 

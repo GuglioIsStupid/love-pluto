@@ -29,12 +29,10 @@
 
 #include <SDL3/SDL_main.h>
 
-// Lua
-extern "C" {
-	#include <lua.h>
-	#include <lualib.h>
-	#include <lauxlib.h>
-}
+// Pluto (Lua subset)
+#include <pluto/lua.h>
+#include <pluto/lualib.h>
+#include <pluto/lauxlib.h>
 
 #ifdef LOVE_WINDOWS
 #define WIN32_LEAN_AND_MEAN

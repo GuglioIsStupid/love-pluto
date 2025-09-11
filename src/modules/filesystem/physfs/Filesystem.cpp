@@ -136,7 +136,7 @@ Filesystem::Filesystem()
 	, commonPathMountInfo()
 	, saveDirectoryNeedsMounting(false)
 {
-	requirePath = {"?.lua", "?/init.lua"};
+	requirePath = {"?.pluto", "?/init.pluto", "?.lua", "?/init.lua"};
 	cRequirePath = {"??"};
 }
 

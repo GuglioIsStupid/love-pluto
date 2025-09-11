@@ -37,7 +37,7 @@ end
 
 local no_game_code = false
 local invalid_game_path = nil
-local main_file = "main.lua"
+local main_file = "main.pluto"
 
 -- This can't be overridden.
 function love.boot()
@@ -81,7 +81,7 @@ function love.boot()
 
 	love.setDeprecationOutput(not love.filesystem.isFused())
 
-	main_file = "main.lua"
+	main_file = "main.pluto"
 	local custom_main_file = false
 
 	local identity = ""
@@ -99,7 +99,7 @@ function love.boot()
 			full_source = love.path.getFull(nouri)
 			local source_leaf = love.path.leaf(full_source)
 
-			if source_leaf:match("%.lua$") then
+			if source_leaf:match("%.pluto$") then
 				main_file = source_leaf
 				custom_main_file = true
 				full_source = love.path.getFull(full_source:sub(1, -(#source_leaf + 1)))
@@ -135,7 +135,7 @@ function love.boot()
 	-- before the save directory (the identity should be appended.)
 	pcall(love.filesystem.setIdentity, identity, true)
 
-	if can_has_game and not (love.filesystem.getInfo(main_file) or (not custom_main_file and love.filesystem.getInfo("conf.lua"))) then
+	if can_has_game and not (love.filesystem.getInfo(main_file) or (not custom_main_file and love.filesystem.getInfo("conf.pluto"))) then
 		no_game_code = true
 	end
 
@@ -232,7 +232,7 @@ function love.init()
 
 	-- If config file exists, load it and allow it to update config table.
 	local confok, conferr
-	if (not love.conf) and love.filesystem and love.filesystem.getInfo("conf.lua") then
+	if (not love.conf) and love.filesystem and love.filesystem.getInfo("conf.pluto") then
 		confok, conferr = pcall(require, "conf")
 	end
 
@@ -427,7 +427,7 @@ function love.init()
 		love.filesystem._setAndroidSaveExternal(c.externalstorage)
 		love.filesystem.setIdentity(c.identity or love.filesystem.getIdentity(), c.appendidentity)
 		if love.filesystem.getInfo(main_file) then
-			require(main_file:gsub("%.lua$", ""))
+			require(main_file:gsub("%.pluto$", ""))
 		end
 	end
 

@@ -34,13 +34,11 @@
 #include <cstddef>
 #include <algorithm>
 
-extern "C" {
 #define LUA_COMPAT_ALL
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
+#include "pluto/lua.h"
+#include "pluto/lualib.h"
+#include "pluto/lauxlib.h"
 #include <enet/enet.h>
-}
 
 #define check_host(l, idx)\
 	*(ENetHost**)luaL_checkudata(l, idx, "enet_host")

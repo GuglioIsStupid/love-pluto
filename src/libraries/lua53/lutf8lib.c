@@ -38,8 +38,8 @@
 
 #include "lutf8lib.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
+#include "pluto/lauxlib.h"
+#include "pluto/lualib.h"
 
 #define MAXUNICODE	0x10FFFF
 

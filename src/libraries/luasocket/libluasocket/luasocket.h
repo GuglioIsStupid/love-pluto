@@ -24,8 +24,8 @@
 #endif
 #endif
 
-#include "lua.h"
-#include "lauxlib.h"
+#include "pluto/lua.h"
+#include "pluto/lauxlib.h"
 #include "compat.h"
 
 /*-------------------------------------------------------------------------*\

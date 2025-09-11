@@ -29,12 +29,10 @@
 #include "deprecation.h"
 
 // Lua
-extern "C" {
-	#define LUA_COMPAT_ALL
-	#include <lua.h>
-	#include <lualib.h>
-	#include <lauxlib.h>
-}
+#define LUA_COMPAT_ALL
+#include <pluto/lua.h>
+#include <pluto/lualib.h>
+#include <pluto/lauxlib.h>
 
 // C++
 #include <exception>
@@ -105,6 +103,13 @@ int luax_traceback(lua_State *L);
  * Gets whether the value at idx is an array of tables.
  **/
 bool luax_isarrayoftables(lua_State *L, int idx);
+
+inline int lua_cpcall(lua_State* L, lua_CFunction func, void* ud)
+{
+    lua_pushcfunction(L, func);
+    lua_pushlightuserdata(L, ud);
+    return lua_pcall(L, 1, 0, 0);
+}
 
 /**
  * Converts the value at idx to a bool. It follow the same rules

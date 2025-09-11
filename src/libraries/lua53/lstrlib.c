@@ -63,10 +63,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lua.h"
+#include "pluto/lua.h"
 
-#include "lauxlib.h"
-#include "lualib.h"
+#include "pluto/lauxlib.h"
+#include "pluto/lualib.h"
 #include "lstrlib.h"
 
 #if LUA_VERSION_NUM == 501

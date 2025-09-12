@@ -159,7 +159,7 @@ static void print_usage()
         "    love --help                     prints this message and quits\n"
         "    love path/to/gamedir            runs the game from the given directory which contains a main.lua file\n"
         "    love path/to/packagedgame.love  runs the packaged game from the provided .love file\n"
-        "    love path/to/file.lua           runs the game from the given .lua file\n"
+        "    love path/to/file.pluto         runs the game from the given .pluto file\n"
         );
 }
 

@@ -77,3 +77,4 @@ stamp-h1
 /testing/output/difference/*.png
 
 build/
+prefix/

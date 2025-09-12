@@ -112,8 +112,10 @@ add_library(lovedep::Ogg INTERFACE IMPORTED)
 add_library(lovedep::Zlib INTERFACE IMPORTED)
 add_library(Pluto STATIC IMPORTED)
 set_target_properties(Pluto PROPERTIES
-    IMPORTED_LOCATION "D:/Code/Pluto/out/static lib x64/pluto.lib"
-    INTERFACE_INCLUDE_DIRECTORIES "D:/include"
+    #IMPORTED_LOCATION "D:/Code/Pluto/out/static lib x64/pluto.lib"
+    #INTERFACE_INCLUDE_DIRECTORIES "D:/include"
+	IMPORTED_LOCATION "$ENV{PLUTO_LIB}"
+	INTERFACE_INCLUDE_DIRECTORIES "$ENV{PLUTO_INCLUDE}"
 )
 
 if(MEGA)
